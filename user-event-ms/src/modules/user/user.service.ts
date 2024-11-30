@@ -27,4 +27,8 @@ export class UserService {
     );
     return await user.save();
   }
+
+  async findOne(email: string): Promise<User | null> {
+    return await User.findOne({ where: { email } });
+  }
 }
