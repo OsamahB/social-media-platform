@@ -31,4 +31,8 @@ export class UserService {
   async findOne(email: string): Promise<User | null> {
     return await User.findOne({ where: { email } });
   }
+
+  async findById(id: number): Promise<User | null> {
+    return await User.findOne({ where: { id } });
+  }
 }
