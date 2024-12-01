@@ -3,18 +3,24 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Post,
+  Put,
+  UseGuards,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 
 import { UserRegisterRequestDto } from './dto/user-register.dto';
 import { UserService } from './user.service';
 import { INPUT_VALIDATION } from 'src/common/validation';
 import { UserRegisterResponse } from './interfaces/user-register.interface';
+import { AuthGuard } from '../auth/auth.guard';
+import { UserUpdateRequestDto } from './dto/user-update.dto';
 
 @Controller('user')
 @ApiTags('User')
@@ -33,5 +39,20 @@ export class UserController {
     userRegister: UserRegisterRequestDto,
   ): Promise<UserRegisterResponse> {
     return await this.userService.doUserRegistration(userRegister);
+  }
+
+  @Put('/profile')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiCreatedResponse({
+    description: 'User object as response',
+    type: UserUpdateRequestDto,
+  })
+  updateProfile(
+    @Request() req: { user_id: number },
+    @Body(INPUT_VALIDATION) user: UserUpdateRequestDto,
+  ): Promise<UserUpdateRequestDto | null> {
+    return this.userService.updateProfile(req.user_id, user);
   }
 }

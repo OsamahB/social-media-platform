@@ -4,6 +4,8 @@ import { User } from './user.entity';
 import { BadRequestException } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import MESSAGES from '../../common/messages.js';
+import { UserUpdateRequestDto } from './dto/user-update.dto.js';
+import { filterBlankValues } from '../../common/utils.js';
 
 @Injectable()
 export class UserService {
@@ -34,5 +36,29 @@ export class UserService {
 
   async findById(id: number): Promise<User | null> {
     return await User.findOne({ where: { id } });
+  }
+
+  async updateProfile(
+    id: number,
+    userUpdate: UserUpdateRequestDto,
+  ): Promise<User> {
+    if (
+      userUpdate.email &&
+      (await User.findOne({ where: { email: userUpdate.email } }))
+    ) {
+      throw new BadRequestException(MESSAGES.EMAIL_ALREADY_EXISTS);
+    }
+
+    const updatedData = filterBlankValues(userUpdate);
+    if (Object.keys(updatedData).length === 0) {
+      throw new BadRequestException(MESSAGES.NO_DATA_PROVIDED);
+    }
+
+    await User.update(id, updatedData);
+    const updatedUser = await User.findOne({ where: { id } });
+    if (!updatedUser) {
+      throw new BadRequestException(MESSAGES.USER_NOT_FOUND);
+    }
+    return updatedUser;
   }
 }
