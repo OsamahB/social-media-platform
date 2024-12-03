@@ -6,6 +6,7 @@ import { UserModule } from './modules/user/user.module';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
+import { KafkaModule } from './modules/kafka/kafka.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     UserModule,
     AuthModule,
+    KafkaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
