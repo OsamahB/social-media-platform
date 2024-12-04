@@ -4,8 +4,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 
@@ -32,9 +32,12 @@ export class EventPost extends BaseEntity {
   @Column()
   period: string;
 
-  @OneToOne(() => User, { onDelete: 'SET NULL' })
+  @OneToMany(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
+
+  @Column()
+  user_id: number;
 
   @CreateDateColumn()
   created_at: Date;
