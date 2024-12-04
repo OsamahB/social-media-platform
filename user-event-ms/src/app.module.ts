@@ -7,6 +7,7 @@ import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { KafkaModule } from './modules/kafka/kafka.module';
+import { EventPostModule } from './modules/event-post/event-post.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { KafkaModule } from './modules/kafka/kafka.module';
     UserModule,
     AuthModule,
     KafkaModule,
+    EventPostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
