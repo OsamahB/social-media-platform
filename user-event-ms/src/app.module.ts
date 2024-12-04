@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { KafkaModule } from './modules/kafka/kafka.module';
 import { EventPostModule } from './modules/event-post/event-post.module';
+import { JoinRequestModule } from './modules/join-request/join-request.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { EventPostModule } from './modules/event-post/event-post.module';
     AuthModule,
     KafkaModule,
     EventPostModule,
+    JoinRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,10 +6,12 @@ import {
   CreateDateColumn,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../user/user.entity';
+import { JoinRequest } from '../join-request/join-request.entity';
 
-@Entity('event-post')
+@Entity('event_post')
 export class EventPost extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -41,4 +43,7 @@ export class EventPost extends BaseEntity {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @OneToMany(() => JoinRequest, (joinRequest) => joinRequest.id)
+  joinRequests: JoinRequest[];
 }
