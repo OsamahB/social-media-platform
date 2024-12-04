@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { EventPost } from '../event-post/event-post.entity';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -24,4 +26,7 @@ export class User extends BaseEntity {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @OneToMany(() => EventPost, (eventPost) => eventPost.id)
+  eventPosts: EventPost[];
 }

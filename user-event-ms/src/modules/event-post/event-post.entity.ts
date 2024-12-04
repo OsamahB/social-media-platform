@@ -5,7 +5,7 @@ import {
   Column,
   CreateDateColumn,
   JoinColumn,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 
@@ -32,7 +32,7 @@ export class EventPost extends BaseEntity {
   @Column()
   period: string;
 
-  @OneToMany(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
