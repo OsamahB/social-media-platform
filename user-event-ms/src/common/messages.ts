@@ -12,6 +12,10 @@ const JOIN_REQUEST_ALREADY_EXISTS =
 const EVENT_NOT_FOUND = 'Event not found, please check the event id';
 const EXPIRED_EVENT = 'Event has already expired';
 const USER_EVENT = 'You cannot join your own event';
+const JOIN_REQUEST_NOT_FOUND = 'Join request not found';
+const JOIN_REQUEST_ALREADY_RESOLVED = 'Join request already accepted/rejected';
+const ACCESS_DENIED =
+  'Access denied, you do not have permission to perform this action';
 
 export default {
   PASSWORD_RULE_MESSAGE,
@@ -25,4 +29,7 @@ export default {
   EVENT_NOT_FOUND,
   EXPIRED_EVENT,
   USER_EVENT,
+  JOIN_REQUEST_NOT_FOUND,
+  JOIN_REQUEST_ALREADY_RESOLVED,
+  ACCESS_DENIED,
 };
