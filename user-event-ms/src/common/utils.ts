@@ -7,3 +7,7 @@ export function filterBlankValues<T extends object>(obj: T): T {
 export const sleep = (timeout: number) => {
   return new Promise<void>((resolve) => setTimeout(resolve, timeout));
 };
+
+export function formatDateString(date: Date): string {
+  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+}
