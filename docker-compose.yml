@@ -46,6 +46,25 @@ services:
     depends_on:
       - zoo1
 
+  user-event-ms:
+    build:
+      context: ./user-event-ms
+    ports:
+      - "${USER_EVENT_PORT-3000}:${USER_EVENT_PORT-3000}"
+    env_file:
+      - .env
+    
+  email-notification-ms:
+    build:
+      context: ./email-notification-ms
+    env_file:
+      - .env
+
 volumes:
   social-media-db-data:
     driver: local
+
+networks:
+  default:
+    external: true
+    name: internal
