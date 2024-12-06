@@ -14,7 +14,7 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
 } from '@nestjs/swagger';
-import { INPUT_VALIDATION } from 'src/common/validation';
+import { INPUT_VALIDATION } from '../../common/validation';
 import { EventPostService } from './event-post.service';
 import { CreateEventPostRequestDto } from './dto/event-post-create.dto';
 import { QueryParamsDto } from './dto/event-post.filter.dto';
@@ -22,7 +22,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { EventPostCreateRequest } from './interfaces/event-post-create.interface';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { EventPostList } from './interfaces/event-post-list.interface';
-import { PaginationParamsDto } from 'src/common/dto';
+import { PaginationParamsDto } from '../../common/dto';
 
 @Controller('event-post')
 export class EventPostController {

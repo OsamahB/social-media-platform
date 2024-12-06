@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
-import { REGEX } from 'src/common/validation';
-import MESSAGES from 'src/common/messages';
+import { REGEX } from '../../../common/validation';
+import MESSAGES from '../../../common/messages';
 
 export class UserRegisterRequestDto {
   @ApiProperty({

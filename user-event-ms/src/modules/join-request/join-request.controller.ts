@@ -13,7 +13,7 @@ import {
   ApiCreatedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
-import { INPUT_VALIDATION } from 'src/common/validation';
+import { INPUT_VALIDATION } from '../../common/validation';
 import { CreateJoinRequestDto } from './dto/create-join-request.dto';
 import { UpdateJoinRequestDto } from './dto/update-join-request.dto copy';
 

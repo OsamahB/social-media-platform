@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateEventPostRequestDto } from './dto/event-post-create.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { EventPost } from './event-post.entity';
-import MESSAGES from '../../common/messages.js';
+import MESSAGES from '../../common/messages';
 import { EventPostList } from './interfaces/event-post-list.interface';
 import { QueryParamsDto } from './dto/event-post.filter.dto';
 import { PaginationParamsDto } from 'src/common/dto';

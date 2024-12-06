@@ -1,28 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { JoinRequest } from './join-request.entity';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
-import MESSAGES from '../../common/messages.js';
+import MESSAGES from '../../common/messages';
 import { EventPost } from '../event-post/event-post.entity';
 import { JoinRequestStatus } from './interfaces/join-request-status.interface';
 import { ProducerService } from '../kafka/producer.service';
-import { User } from '../user/user.entity';
-import { formatDateString } from 'src/common/utils';
+import { UserService } from '../user/user.service';
+import { formatDateString } from '../../common/utils';
+import { InjectRepository } from '@nestjs/typeorm';
+import { JoinRequestRepository } from './join-request.repository';
+import { EventPostRepository } from '../event-post/event-post.repository';
+import { JoinRequest } from './join-request.entity';
 
 @Injectable()
 export class JoinRequestService {
-  constructor(private readonly producerService: ProducerService) {}
+  constructor(
+    private readonly producerService: ProducerService,
+    private readonly userService: UserService,
+    @InjectRepository(JoinRequest)
+    private readonly joinRequestRepository: JoinRequestRepository,
+    @InjectRepository(EventPost)
+    private readonly eventPostRepository: EventPostRepository,
+  ) {}
 
   async createJoinRequest(
     user_id: number,
     event_post_id: number,
   ): Promise<{ message: string }> {
-    const hasJoinRequest = await JoinRequest.findOne({
+    const hasJoinRequest = await this.joinRequestRepository.findOne({
       where: { user_id, event_post_id },
     });
     if (hasJoinRequest) {
       throw new BadRequestException(MESSAGES.JOIN_REQUEST_ALREADY_EXISTS);
     }
-    const eventPost = await EventPost.findOne({
+    const eventPost = await this.eventPostRepository.findOne({
       relations: ['user'],
       where: { id: event_post_id },
     });
@@ -35,11 +45,13 @@ export class JoinRequestService {
     if (eventPost.user_id === user_id) {
       throw new BadRequestException(MESSAGES.USER_EVENT);
     }
-    await JoinRequest.create({
-      user_id,
-      event_post_id,
-    }).save();
-    const requested_user = await User.findOne({ where: { id: user_id } });
+    await this.joinRequestRepository
+      .create({
+        user_id,
+        event_post_id,
+      })
+      .save();
+    const requested_user = await this.userService.findById(user_id);
     await this.producerService.produce('email-notification', {
       value: JSON.stringify({
         to: eventPost.user.email,
@@ -62,14 +74,14 @@ export class JoinRequestService {
     request_id: number,
     status: JoinRequestStatus.ACCEPTED | JoinRequestStatus.REJECTED,
   ): Promise<{ message: string }> {
-    const joinRequest = await JoinRequest.findOne({
+    const joinRequest = await this.joinRequestRepository.findOne({
       relations: ['user'],
       where: { id: request_id },
     });
     if (!joinRequest) {
       throw new BadRequestException(MESSAGES.JOIN_REQUEST_NOT_FOUND);
     }
-    const eventPost = await EventPost.findOne({
+    const eventPost = await this.eventPostRepository.findOne({
       where: { id: joinRequest.event_post_id },
     });
     if (eventPost?.user_id !== user_id) {
@@ -79,7 +91,7 @@ export class JoinRequestService {
       throw new BadRequestException(MESSAGES.JOIN_REQUEST_ALREADY_RESOLVED);
     }
     joinRequest.status = status;
-    await joinRequest.save();
+    // await joinRequest.save();
     await this.producerService.produce('email-notification', {
       value: JSON.stringify({
         to: joinRequest.user.email,

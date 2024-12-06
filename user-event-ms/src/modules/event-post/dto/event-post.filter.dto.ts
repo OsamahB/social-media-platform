@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate } from 'class-validator';
-import MESSAGES from '../../../common/messages.js';
+import MESSAGES from '../../../common/messages';
 import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class QueryParamsDto {

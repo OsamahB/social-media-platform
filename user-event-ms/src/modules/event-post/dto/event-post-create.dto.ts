@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsDate } from 'class-validator';
-import MESSAGES from '../../../common/messages.js';
+import MESSAGES from '../../../common/messages';
 
 export class CreateEventPostRequestDto {
   @ApiProperty({

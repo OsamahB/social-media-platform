@@ -17,7 +17,7 @@ import {
 
 import { UserRegisterRequestDto } from './dto/user-register.dto';
 import { UserService } from './user.service';
-import { INPUT_VALIDATION } from 'src/common/validation';
+import { INPUT_VALIDATION } from '../../common/validation';
 import { UserRegisterResponse } from './interfaces/user-register.interface';
 import { AuthGuard } from '../auth/auth.guard';
 import { UserUpdateRequestDto } from './dto/user-update.dto';
@@ -47,12 +47,12 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiCreatedResponse({
     description: 'User object as response',
-    type: UserUpdateRequestDto,
+    type: UserRegisterResponse,
   })
   updateProfile(
     @Request() req: { user_id: number },
     @Body(INPUT_VALIDATION) user: UserUpdateRequestDto,
-  ): Promise<UserUpdateRequestDto | null> {
+  ): Promise<UserRegisterResponse> {
     return this.userService.updateProfile(req.user_id, user);
   }
 }
