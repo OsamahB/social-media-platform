@@ -41,6 +41,11 @@ export class EventPostController {
     eventPost: CreateEventPostRequestDto,
     @Request() req: { user_id: number },
   ): Promise<EventPostCreateRequest> {
+    /**
+     * Endpoint to create an event post.
+     * This endpoint receives a POST request with the event post data in the request body
+     * and returns the created event post.
+     */
     return await this.eventPostService.createEventPost(req.user_id, eventPost);
   }
 
@@ -55,6 +60,11 @@ export class EventPostController {
     @Query(new ValidationPipe({ transform: true }))
     pagination: PaginationParamsDto,
   ): Promise<Pagination<EventPostList>> {
+    /**
+     * Endpoint to list event posts.
+     * This endpoint receives a GET request with optional query parameters for filtering and pagination
+     * and returns a paginated list of event posts.
+     */
     return await this.eventPostService.listEventPosts(pagination, filter);
   }
 }

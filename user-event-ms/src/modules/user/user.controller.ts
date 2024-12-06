@@ -38,6 +38,11 @@ export class UserController {
     @Body(INPUT_VALIDATION)
     userRegister: UserRegisterRequestDto,
   ): Promise<UserRegisterResponse> {
+    /**
+     * Endpoint to register a user.
+     * This endpoint receives a POST request with the user's data in the request body
+     * and returns the created user object.
+     */
     return await this.userService.doUserRegistration(userRegister);
   }
 
@@ -53,6 +58,11 @@ export class UserController {
     @Request() req: { user_id: number },
     @Body(INPUT_VALIDATION) user: UserUpdateRequestDto,
   ): Promise<UserRegisterResponse> {
+    /**
+     * Endpoint to update the user's profile.
+     * This endpoint receives a PUT request with the user's data in the request body
+     * and returns the updated user object.
+     */
     return this.userService.updateProfile(req.user_id, user);
   }
 }

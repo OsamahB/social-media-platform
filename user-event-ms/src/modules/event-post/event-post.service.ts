@@ -13,6 +13,7 @@ export class EventPostService {
     user_id: number,
     eventPost: CreateEventPostRequestDto,
   ): Promise<EventPost> {
+    // Check if the event date is in the past
     if (eventPost.date < new Date()) {
       throw new BadRequestException(MESSAGES.DATE_IN_PAST);
     }
@@ -27,6 +28,7 @@ export class EventPostService {
     paginationOptions: PaginationParamsDto,
     filter: QueryParamsDto,
   ): Promise<Pagination<EventPostList>> {
+    // Filter the event posts based on the query parameters
     const [data, itemCount] = await EventPost.findAndCount({
       where: filter,
       order: { created_at: 'DESC' },
@@ -35,7 +37,8 @@ export class EventPostService {
       take: paginationOptions.limit,
     });
 
-    //   TODO: Improve the response format to return only the needed fields from db
+    // TODO: Improve the response format to return only the needed fields from db
+    // Format the response data
     const items = data.map((eventPost) => {
       return {
         id: eventPost.id,

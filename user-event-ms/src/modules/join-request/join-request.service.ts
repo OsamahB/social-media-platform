@@ -26,12 +26,14 @@ export class JoinRequestService {
     user_id: number,
     event_post_id: number,
   ): Promise<{ message: string }> {
+    // Check if the user has already requested to join the event
     const hasJoinRequest = await this.joinRequestRepository.findOne({
       where: { user_id, event_post_id },
     });
     if (hasJoinRequest) {
       throw new BadRequestException(MESSAGES.JOIN_REQUEST_ALREADY_EXISTS);
     }
+    // Check if the event exists and is not expired
     const eventPost = await this.eventPostRepository.findOne({
       relations: ['user'],
       where: { id: event_post_id },
@@ -45,12 +47,14 @@ export class JoinRequestService {
     if (eventPost.user_id === user_id) {
       throw new BadRequestException(MESSAGES.USER_EVENT);
     }
+    // Create the join request
     await this.joinRequestRepository
       .create({
         user_id,
         event_post_id,
       })
       .save();
+    // Notify the event creator about the join request
     const requested_user = await this.userService.findById(user_id);
     await this.producerService.produce('email-notification', {
       value: JSON.stringify({
@@ -74,6 +78,7 @@ export class JoinRequestService {
     request_id: number,
     status: JoinRequestStatus.ACCEPTED | JoinRequestStatus.REJECTED,
   ): Promise<{ message: string }> {
+    // Check if the join request exists
     const joinRequest = await this.joinRequestRepository.findOne({
       relations: ['user'],
       where: { id: request_id },
@@ -81,17 +86,21 @@ export class JoinRequestService {
     if (!joinRequest) {
       throw new BadRequestException(MESSAGES.JOIN_REQUEST_NOT_FOUND);
     }
+    // Check if the user is the event creator
     const eventPost = await this.eventPostRepository.findOne({
       where: { id: joinRequest.event_post_id },
     });
     if (eventPost?.user_id !== user_id) {
       throw new ForbiddenException(MESSAGES.ACCESS_DENIED);
     }
+    // Check if the join request is already resolved
     if (joinRequest.status !== JoinRequestStatus.PENDING) {
       throw new BadRequestException(MESSAGES.JOIN_REQUEST_ALREADY_RESOLVED);
     }
+    // Update the join request status
     joinRequest.status = status;
-    // await joinRequest.save();
+    await joinRequest.save();
+    // Notify the user about the join request status
     await this.producerService.produce('email-notification', {
       value: JSON.stringify({
         to: joinRequest.user.email,

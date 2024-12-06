@@ -39,18 +39,26 @@ export class EmailService {
     template: TemplateType;
     emailData: any;
   }): boolean {
+    /**
+     * This function validates the email data before sending the email.
+     * returns true if the data is valid, otherwise false.
+     */
+    // Check if the email is valid
     if (typeof to !== 'string' || !emailRegx.test(to)) {
       return false;
     }
+    // Check if the template is valid
     if (
       typeof template !== 'string' ||
       !Object.values(TemplateType).includes(template)
     ) {
       return false;
     }
+    // Check if the emailData is of type object and not null
     if (typeof emailData !== 'object' || emailData === null) {
       return false;
     }
+    // Check if the emailData has the required fields based on the template
     const { receiverName, eventTitle, eventDate } = emailData;
     if (
       typeof receiverName !== 'string' ||

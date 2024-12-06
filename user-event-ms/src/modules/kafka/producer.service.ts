@@ -15,6 +15,7 @@ export class ProducerService implements OnApplicationShutdown {
 
   private async getProducer(topic: string) {
     let producer = this.producers.get(topic);
+    // Create a new producer if it doesn't exist
     if (!producer) {
       producer = new KafkajsProducer(
         topic,

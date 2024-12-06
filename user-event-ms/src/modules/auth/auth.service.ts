@@ -11,6 +11,7 @@ export class AuthService {
   ) {}
 
   async signIn(email: string, pass: string): Promise<{ access_token: string }> {
+    // Check if the user exists in the database and verify the password
     const user = await this.userService.findOne(email);
     if (!user || !(await compare(pass, user.password))) {
       throw new UnauthorizedException();

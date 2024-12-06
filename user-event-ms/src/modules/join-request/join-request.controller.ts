@@ -30,6 +30,12 @@ export class JoinRequestController {
     @Body(INPUT_VALIDATION) { event_post_id }: CreateJoinRequestDto,
     @Request() req: { user_id: number },
   ): Promise<{ message: string }> {
+    /**
+     * Endpoint to request to join an event.
+     * This endpoint receives a POST request with the event post ID in the request body and
+     * will notify the event creator that the user wants to join the event.
+     * the user can only request to join an event once.
+     */
     return await this.joinRequestService.createJoinRequest(
       req.user_id,
       event_post_id,
@@ -45,6 +51,11 @@ export class JoinRequestController {
     @Body(INPUT_VALIDATION) updateJoinRequest: UpdateJoinRequestDto,
     @Request() req: { user_id: number },
   ): Promise<{ message: string }> {
+    /**
+     * Endpoint to accept or reject a join request.
+     * This endpoint receives a PATCH request with the request ID and the status in the request body
+     * and will update the status of the join request with notification to the requester.
+     */
     return await this.joinRequestService.updateJoinRequest(
       req.user_id,
       updateJoinRequest.request_id,
