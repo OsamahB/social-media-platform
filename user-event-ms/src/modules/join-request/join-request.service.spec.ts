@@ -147,7 +147,10 @@ describe('JoinRequestService', () => {
       joinRequest.status = JoinRequestStatus.PENDING;
       joinRequest.user = requestedUser;
 
-      mockJoinRequestRepository.findOne.mockReturnValue(joinRequest);
+      mockJoinRequestRepository.findOne.mockReturnValue({
+        ...joinRequest,
+        ...mockJoinRequestRepository,
+      });
       mockEventPostRepository.findOne.mockReturnValue(eventPost);
       mockJoinRequestRepository.save.mockReturnValue(expect.anything());
       mockProducerService.produce.mockReturnValue(null);

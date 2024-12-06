@@ -2,13 +2,20 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateEventPostRequestDto } from './dto/event-post-create.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { EventPost } from './event-post.entity';
+import { EventPostRepository } from './event-post.repository';
 import MESSAGES from '../../common/messages';
 import { EventPostList } from './interfaces/event-post-list.interface';
 import { QueryParamsDto } from './dto/event-post.filter.dto';
 import { PaginationParamsDto } from 'src/common/dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class EventPostService {
+  constructor(
+    @InjectRepository(EventPost)
+    private eventPostRepository: EventPostRepository,
+  ) {}
+
   async createEventPost(
     user_id: number,
     eventPost: CreateEventPostRequestDto,
@@ -18,10 +25,12 @@ export class EventPostService {
       throw new BadRequestException(MESSAGES.DATE_IN_PAST);
     }
 
-    return await EventPost.create({
-      ...eventPost,
-      user_id,
-    }).save();
+    return await this.eventPostRepository
+      .create({
+        ...eventPost,
+        user_id,
+      })
+      .save();
   }
 
   async listEventPosts(
@@ -29,7 +38,7 @@ export class EventPostService {
     filter: QueryParamsDto,
   ): Promise<Pagination<EventPostList>> {
     // Filter the event posts based on the query parameters
-    const [data, itemCount] = await EventPost.findAndCount({
+    const [data, itemCount] = await this.eventPostRepository.findAndCount({
       where: filter,
       order: { created_at: 'DESC' },
       relations: ['user'],
